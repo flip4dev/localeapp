@@ -9,7 +9,7 @@ module Localeapp
       # requires the Localeapp configuration
       def initialize_config(args = {})
         Localeapp.configure # load defaults
-        load_config_file
+        load_config_file(args)
         set_command_line_arguments(args)
       end
 
@@ -23,10 +23,14 @@ module Localeapp
         end
       end
 
-      def load_config_file
-        Localeapp.default_config_file_paths.each do |path|
-          next unless File.exists? path
-          require path
+      def load_config_file(args = {})
+        if args[:c] && File.exists?(args[:c])
+          require args[:c]
+        else
+          Localeapp.default_config_file_paths.each do |path|
+            next unless File.exists? path
+            require path
+          end
         end
       end
     end
